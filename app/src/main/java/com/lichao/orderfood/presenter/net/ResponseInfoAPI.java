@@ -17,4 +17,7 @@ public interface ResponseInfoAPI {
     //请求的响应结果
     @GET(Constant.HOME_URL)
     Call<ResponseInfo> getHomeInfo(@Query("latitude") String latitude, @Query("longitude") String longitude);
+
+    @GET(Constant.BUSINESS)
+    Call<ResponseInfo> getBusinessInfo(@Query("sellerId")long sellerId);
 }

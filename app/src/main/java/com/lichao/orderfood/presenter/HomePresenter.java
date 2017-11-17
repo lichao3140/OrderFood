@@ -26,7 +26,7 @@ public class HomePresenter extends BasePresenter {
     @Override
     protected void parseJson(String json) {
         //在此处解析json
-        Log.i("",json);
+        Log.i("HomePresenter:",json);
         Gson gson = new Gson();
         //获取首页的数据
         HomeInfo homeInfo = gson.fromJson(json, HomeInfo.class);

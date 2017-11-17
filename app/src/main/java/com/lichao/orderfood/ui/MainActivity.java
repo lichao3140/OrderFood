@@ -6,12 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+
 import com.lichao.orderfood.R;
 import com.lichao.orderfood.ui.fragment.HomeFragment;
 import com.lichao.orderfood.ui.fragment.MoreFragment;
 import com.lichao.orderfood.ui.fragment.OrderFragment;
 import com.lichao.orderfood.ui.fragment.UserFragment;
+
 import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -54,8 +57,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         fragmentList.add(new HomeFragment());
         fragmentList.add(new OrderFragment());
-        fragmentList.add(new MoreFragment());
         fragmentList.add(new UserFragment());
+        fragmentList.add(new MoreFragment());
     }
 
     @Override

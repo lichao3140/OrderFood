@@ -18,22 +18,37 @@ android {
     }
 }
 
+repositories {
+    flatDir{
+        dirs 'libs' //就是放aar的目录地址
+    }
+}
+
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
-
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
-
-    implementation 'com.squareup.picasso:picasso:2.5.2'    // picasso异步加载图片
-    implementation 'com.nineoldandroids:library:2.4.0'     //兼容低版本动画的jar包
-    implementation 'com.daimajia.slider:library:1.1.5@aar' //包含轮播图自动轮训的自定义控件
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    // picasso异步加载图片
+    implementation 'com.nineoldandroids:library:2.4.0'
+    //兼容低版本动画的jar包
+    implementation 'com.daimajia.slider:library:1.1.5@aar'
+    //包含轮播图自动轮训的自定义控件
+    implementation 'com.flipboard:bottomsheet-commons:1.5.1'
+    //点击弹出对话框效果的自定义控件
+    implementation 'com.flipboard:bottomsheet-core:1.5.1'
+    implementation 'se.emilsjolander:stickylistheaders:2.7.0'
+    //短信验证码第三方
+    implementation files('libs/MobCommons-2017.0607.1736.jar')
+    implementation files('libs/MobTools-2017.0607.1736.jar')
+    implementation name:'SMSSDK-3.0.0',ext:'aar'
+    implementation name:'SMSSDKGUI-3.0.0',ext:'aar'
 }

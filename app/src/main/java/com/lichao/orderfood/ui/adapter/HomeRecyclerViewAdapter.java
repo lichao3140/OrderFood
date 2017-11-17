@@ -1,6 +1,7 @@
 package com.lichao.orderfood.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import com.lichao.orderfood.R;
 import com.lichao.orderfood.presenter.net.bean.HomeInfo;
 import com.lichao.orderfood.presenter.net.bean.HomeItem;
 import com.lichao.orderfood.presenter.net.bean.Promotion;
+import com.lichao.orderfood.presenter.net.bean.Seller;
+import com.lichao.orderfood.ui.BusinessActivity;
+
 import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +67,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
         } else if (data.getBody().get(position-1).type == 0) {
             //一般条目,指向商家
             setSellerData(holder,data.getBody().get(position-1));
+            ((SellerHolder) holder).setPosition(position - 1);
         } else {
             setDivData(holder,data.getBody().get(position-1));
         }
@@ -148,9 +153,28 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
         @BindView(R.id.ratingBar)
         RatingBar ratingBar;
 
+        private int position;
+
         public SellerHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //区分点中的是那个条目,获取每一个条目的索引值
+                    Intent intent = new Intent(mContext, BusinessActivity.class);
+                    //需要传递的对象所在的类,需要实现序列化接口
+                    Seller seller = data.getBody().get(position).getSeller();
+                    intent.putExtra("seller", seller);
+                    mContext.startActivity(intent);
+                }
+            });
+        }
+
+        //已经减过1的索引值,直接用此索引获取集合中的数据
+        public void setPosition(int position) {
+            this.position = position;
         }
     }
 

@@ -5,4 +5,5 @@ package com.lichao.orderfood.ui.fragment;
  */
 
 public class MoreFragment extends BaseFragment {
+
 }
