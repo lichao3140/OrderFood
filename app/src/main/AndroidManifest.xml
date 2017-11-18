@@ -16,7 +16,7 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:name="com.mob.MobApplication"
+        android:name=".global.MyApplication"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -36,8 +36,5 @@
             android:configChanges="keyboardHidden|orientation|screenSize|locale|layoutDirection"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-
-        <meta-data android:name="Mob-AppKey" android:value="2271f16c7ece6"/>
-        <meta-data android:name="Mob-AppSecret" android:value="a9494347e9c76baa217decee7c721796"/>
     </application>
 </manifest>

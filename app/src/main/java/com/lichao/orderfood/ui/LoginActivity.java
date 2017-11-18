@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.lichao.orderfood.R;
 import com.lichao.orderfood.utils.SMSUtil;
+import com.mob.MobSDK;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +59,7 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        MobSDK.init(this, "2271f16c7ece6", "a9494347e9c76baa217decee7c721796");
         //要让afterEvent方法生效,必须在此次做事件监听
         SMSSDK.registerEventHandler(eventHandler);
 
