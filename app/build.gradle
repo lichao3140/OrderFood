@@ -47,8 +47,10 @@ dependencies {
     implementation 'com.flipboard:bottomsheet-core:1.5.1'
     implementation 'se.emilsjolander:stickylistheaders:2.7.0'
     //短信验证码第三方
-    implementation files('libs/MobCommons-2017.0607.1736.jar')
-    implementation files('libs/MobTools-2017.0607.1736.jar')
-    implementation name:'SMSSDK-3.0.0',ext:'aar'
-    implementation name:'SMSSDKGUI-3.0.0',ext:'aar'
+    implementation files('libs/MobCommons-2016.1201.1839.jar')
+    implementation files('libs/MobTools-2016.1201.1839.jar')
+    implementation name: 'SMSSDK-2.1.3', ext: 'aar'
+    implementation name: 'SMSSDKGUI-2.1.3', ext: 'aar'
+
+    implementation 'com.j256.ormlite:ormlite-android:5.0'
 }

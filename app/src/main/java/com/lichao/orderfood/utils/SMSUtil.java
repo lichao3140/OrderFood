@@ -42,8 +42,6 @@ public class SMSUtil {
             return mobileNums.matches(telRegex);
     }
 
-
-
     /**
      * 判断一个字符串的位数
      *

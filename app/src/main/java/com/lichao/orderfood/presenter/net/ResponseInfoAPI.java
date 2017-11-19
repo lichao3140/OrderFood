@@ -20,4 +20,8 @@ public interface ResponseInfoAPI {
 
     @GET(Constant.BUSINESS)
     Call<ResponseInfo> getBusinessInfo(@Query("sellerId")long sellerId);
+
+    @GET(Constant.LOGIN)
+    Call<ResponseInfo> getLoginInfo(@Query("username") String username, @Query("password") String password,
+                                    @Query("phone") String phone, @Query("type") int type);
 }

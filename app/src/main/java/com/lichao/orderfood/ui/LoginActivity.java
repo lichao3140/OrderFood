@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -11,8 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lichao.orderfood.R;
+import com.lichao.orderfood.presenter.LoginPresenter;
 import com.lichao.orderfood.utils.SMSUtil;
-import com.mob.MobSDK;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +36,8 @@ public class LoginActivity extends BaseActivity {
     EditText etUserPhone;
     @BindView(R.id.tv_user_code)
     TextView tvUserCode;
+    @BindView(R.id.et_user_psd)
+    EditText etUserPsd;
     @BindView(R.id.et_user_code)
     EditText etUserCode;
     @BindView(R.id.login)
@@ -53,19 +56,21 @@ public class LoginActivity extends BaseActivity {
     //倒计时60S
     private int time = 60;
 
+    private LoginPresenter loginPresenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        MobSDK.init(this, "2271f16c7ece6", "a9494347e9c76baa217decee7c721796");
         //要让afterEvent方法生效,必须在此次做事件监听
         SMSSDK.registerEventHandler(eventHandler);
 
+        loginPresenter = new LoginPresenter(this);
     }
 
-    @OnClick({R.id.tv_user_code,R.id.login})
+    @OnClick({R.id.tv_user_code, R.id.login})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.tv_user_code:
@@ -74,7 +79,7 @@ public class LoginActivity extends BaseActivity {
             case R.id.login:
                 //用户是否输入的账号(手机号)+密码+验证码
                 //用户的验证码+手机号码是否匹配
-                //checkLogin();
+                checkLogin();
                 break;
         }
     }
@@ -142,8 +147,32 @@ public class LoginActivity extends BaseActivity {
         }
     };
 
-    private void login() {
+    private void checkLogin() {
+        String phone = etUserPhone.getText().toString().trim();
+        boolean mobileNO = SMSUtil.isMobileNO(phone);
+        String psd = etUserPsd.getText().toString().trim();
+        boolean psdNo = TextUtils.isEmpty(psd);
+        String code = etUserCode.getText().toString();
+        boolean codeNo = TextUtils.isEmpty(code);
 
+//        if (mobileNO && !psdNo && !codeNo) {
+//            //输入内容合法,判断验证码和手机号码是否匹配
+//            SMSSDK.submitVerificationCode("86",phone,code);//此验证请求发出去后,需要对结果进行验证
+//        }
+        login();
+    }
+
+    private void login() {
+        String phone = etUserPhone.getText().toString().trim();
+        boolean mobileNO = SMSUtil.isMobileNO(phone);
+        String psd = etUserPsd.getText().toString().trim();
+        boolean psdNo = TextUtils.isEmpty(psd);
+        String code = etUserCode.getText().toString().trim();
+        boolean codeNo = TextUtils.isEmpty(code);
+
+        if (mobileNO && !psdNo && !codeNo){
+            loginPresenter.getLoginData(phone, psd, phone, 2);
+        }
     }
 
     private void sendCode() {
