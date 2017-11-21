@@ -49,6 +49,15 @@ public class GoodsTypeAdapter extends RecyclerView.Adapter {
             ((ViewHolder) holder).itemView.setBackgroundColor(Color.LTGRAY);
         }
         ((ViewHolder) holder).setPosition(position);
+
+        //根据此分类是否有选中商品更新UI
+        if (data.get(position).getCount() == 0) {
+            //此分类没有选中商品
+            ((ViewHolder) holder).tvCount.setVisibility(View.GONE);
+        } else {
+            ((ViewHolder) holder).tvCount.setVisibility(View.VISIBLE);
+            ((ViewHolder) holder).tvCount.setText(data.get(position).getCount() + "");
+        }
     }
 
     @Override
@@ -95,6 +104,36 @@ public class GoodsTypeAdapter extends RecyclerView.Adapter {
 
     public List<GoodsTypeInfo> getData() {
         return data;
+    }
+
+    /**
+     * 刷新购物车数量
+     * @param typeId   更新分类id
+     * @param operate  更新方式(加一件,减一件)
+     */
+    public void refreshGoodsType(int typeId, int operate) {
+        //在此处根据传递的typeId和操作类型更新data(左侧列表的数据集合)中的数据
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).getId() == typeId) {
+                //找到了需要更新分类数量的条目
+                switch (operate) {
+                    case GoodsAdapter.ADD:
+                        //对typeId一致的分类添加一件商品
+                        int countAdd = data.get(i).getCount() + 1;
+                        data.get(i).setCount(countAdd);
+                        break;
+                    case GoodsAdapter.DELETE:
+                        //对typeId一致的分类删除一件商品,商品的分类数量>0
+                        if (data.get(i).getCount() > 0) {
+                            int countDelete = data.get(i).getCount() - 1;
+                            data.get(i).setCount(countDelete);
+                        }
+                        break;
+                }
+                notifyDataSetChanged();
+                break;
+            }
+        }
     }
 
     public void setData(List<GoodsTypeInfo> data) {

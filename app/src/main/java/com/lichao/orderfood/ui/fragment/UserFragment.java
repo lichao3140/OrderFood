@@ -77,16 +77,16 @@ public class UserFragment extends BaseFragment {
                 login.setVisibility(View.GONE);
                 llUserinfo.setVisibility(View.VISIBLE);
                 UserInfo userInfo = dao.queryForId(MyApplication.userId);
-                if (userInfo != null) {
+                if (userInfo != null){
                     username.setText(userInfo.getName());//从数据库中查询出来用户名称放在控件中显示
                     phone.setText(userInfo.getPhone());//从数据库中查询出来用户名称放在控件中显示
-                } else {
-                    llUserinfo.setVisibility(View.GONE);
-                    login.setVisibility(View.VISIBLE);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }else{
+            llUserinfo.setVisibility(View.GONE);
+            login.setVisibility(View.VISIBLE);
         }
         super.onResume();
     }

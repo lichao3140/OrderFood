@@ -3,7 +3,9 @@ package com.lichao.orderfood.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -12,8 +14,13 @@ import android.widget.TextView;
 
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lichao.orderfood.R;
+import com.lichao.orderfood.presenter.BusinessPresenter;
 import com.lichao.orderfood.presenter.net.bean.Seller;
 import com.lichao.orderfood.ui.adapter.BusinessFragmentPagerAdapter;
+import com.lichao.orderfood.ui.fragment.GoodsFragment;
+import com.lichao.orderfood.utils.CountPriceFormater;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,12 +62,15 @@ public class BusinessActivity extends BaseActivity {
 
     private String[] stringArray = new String[]{"商品","评价","商家"};
     private Seller seller;
+    private BusinessFragmentPagerAdapter businessFragmentPagerAdapter;
+    public BusinessPresenter businessPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bussiness);
         ButterKnife.bind(this);
+        businessPresenter = new BusinessPresenter(this);
 
         seller = (Seller) getIntent().getSerializableExtra("seller");
 
@@ -75,7 +85,7 @@ public class BusinessActivity extends BaseActivity {
     private void initViewPager() {
         //PagerAdapter----->viewpager中直接指定添加的view对象
         //FragmentPagerAdapter----->viewpager中添加的是fragment onCreateView方法中返回的view对象
-        BusinessFragmentPagerAdapter businessFragmentPagerAdapter = new BusinessFragmentPagerAdapter(getSupportFragmentManager(), stringArray, seller);
+        businessFragmentPagerAdapter = new BusinessFragmentPagerAdapter(getSupportFragmentManager(), stringArray, seller);
         vp.setAdapter(businessFragmentPagerAdapter);
     }
 
@@ -109,6 +119,35 @@ public class BusinessActivity extends BaseActivity {
     public void removeImageView(ImageView imageView) {
         if (imageView!=null){
             flContainer.removeView(imageView);
+        }
+    }
+
+    /**
+     * 获取GoodsFragment方法
+     * @return
+     */
+    public GoodsFragment getGoodsFragment() {
+        ArrayList<Fragment> fragmentList = businessFragmentPagerAdapter.getFragmentList();
+        if (fragmentList != null && fragmentList.size() > 0) {
+            GoodsFragment goodsFragment = (GoodsFragment) fragmentList.get(0);
+            return goodsFragment;
+        }
+        return null;
+    }
+
+    /**
+     * 更新钱和数量方法
+     * @param totalCount    购物车中数量
+     * @param totalPrice    购物车中金额
+     */
+    public void updateShopCartCount(int totalCount, float totalPrice) {
+        if (totalCount == 0){
+            tvSelectNum.setVisibility(View.GONE);
+            tvCountPrice.setText(CountPriceFormater.format(0.0f));
+        }else{
+            tvSelectNum.setVisibility(View.VISIBLE);
+            tvSelectNum.setText(totalCount + "");
+            tvCountPrice.setText(CountPriceFormater.format(totalPrice));
         }
     }
 

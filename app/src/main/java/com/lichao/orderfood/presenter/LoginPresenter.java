@@ -2,7 +2,6 @@ package com.lichao.orderfood.presenter;
 
 import android.content.Context;
 import android.util.Log;
-
 import com.google.gson.Gson;
 import com.j256.ormlite.android.AndroidDatabaseConnection;
 import com.j256.ormlite.dao.Dao;
@@ -11,11 +10,9 @@ import com.lichao.orderfood.model.DBHelper;
 import com.lichao.orderfood.model.bean.UserInfo;
 import com.lichao.orderfood.presenter.net.bean.ResponseInfo;
 import com.lichao.orderfood.ui.LoginActivity;
-
 import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.util.List;
-
 import retrofit2.Call;
 
 /**
@@ -82,7 +79,7 @@ public class LoginPresenter extends BasePresenter {
                 } else {
                     //3.2 此用户之前从来没有在此手机上登录过,插入一条登录数据
                     userInfo.setLogin(1);
-                    dao.create(userBean);
+                    dao.create(userInfo);
                 }
                 //提交事务
                 connection.commit(start);

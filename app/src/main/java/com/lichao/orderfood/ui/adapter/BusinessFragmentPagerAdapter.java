@@ -62,4 +62,8 @@ public class BusinessFragmentPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return mStringArry[position];
     }
+
+    public ArrayList<Fragment> getFragmentList() {
+        return fragmentList;
+    }
 }

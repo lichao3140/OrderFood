@@ -158,6 +158,7 @@ public class LoginActivity extends BaseActivity {
 //        if (mobileNO && !psdNo && !codeNo) {
 //            //输入内容合法,判断验证码和手机号码是否匹配
 //            SMSSDK.submitVerificationCode("86",phone,code);//此验证请求发出去后,需要对结果进行验证
+//            login();
 //        }
         login();
     }

@@ -40,7 +40,7 @@ public class GoodsFragment extends BaseFragment {
 
     private Seller seller;
     private GoodsTypeAdapter goodsTypeAdapter;
-    private GoodsAdapter goodsAdapter;
+    public GoodsAdapter goodsAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,5 +133,13 @@ public class GoodsFragment extends BaseFragment {
                 }
             }
         }
+    }
+
+    /**
+     * 返回左侧的数据适配器对象
+     * @return
+     */
+    public GoodsTypeAdapter getGoodsTypeAdapter() {
+        return goodsTypeAdapter;
     }
 }
