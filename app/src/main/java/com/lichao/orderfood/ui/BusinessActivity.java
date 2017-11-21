@@ -149,16 +149,6 @@ public class BusinessActivity extends BaseActivity {
             tvSelectNum.setText(totalCount + "");
             tvCountPrice.setText(CountPriceFormater.format(totalPrice));
         }
-        //判断购买的商品的总金额是否大于起送金额,大于隐藏起送价,显示去下单UI效果
-        float sendPrice = Float.parseFloat(seller.getSendPrice());
-        if (totalPrice>sendPrice){
-            //显示去下单按钮,隐藏起送价格
-            tvSubmit.setVisibility(View.VISIBLE);
-            tvSendPrice.setVisibility(View.GONE);
-        }else{
-            tvSubmit.setVisibility(View.GONE);
-            tvSendPrice.setVisibility(View.VISIBLE);
-        }
     }
 
 }
