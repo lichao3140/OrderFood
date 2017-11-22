@@ -1,10 +1,14 @@
 package com.lichao.orderfood.ui;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -15,15 +19,19 @@ import android.widget.TextView;
 import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.lichao.orderfood.R;
 import com.lichao.orderfood.presenter.BusinessPresenter;
+import com.lichao.orderfood.presenter.net.bean.GoodsInfo;
 import com.lichao.orderfood.presenter.net.bean.Seller;
 import com.lichao.orderfood.ui.adapter.BusinessFragmentPagerAdapter;
+import com.lichao.orderfood.ui.adapter.ShopCartAdapter;
 import com.lichao.orderfood.ui.fragment.GoodsFragment;
 import com.lichao.orderfood.utils.CountPriceFormater;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Administrator on 2017-11-17.
@@ -64,6 +72,8 @@ public class BusinessActivity extends BaseActivity {
     private Seller seller;
     private BusinessFragmentPagerAdapter businessFragmentPagerAdapter;
     public BusinessPresenter businessPresenter;
+    private View shopCartListView;
+    private ShopCartAdapter shopCartAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,6 +90,16 @@ public class BusinessActivity extends BaseActivity {
         initViewPager();
         //选项卡和viewpager绑定
         tabs.setupWithViewPager(vp);
+
+        String deliveryFee = seller.getDeliveryFee();
+        //将金额转换成float类型然后在转换成String类型,在前面加上¥符号
+        String strDeliveryFee = CountPriceFormater.format(Float.parseFloat(deliveryFee));
+        //更改运费
+        tvDeliveryFee.setText("运费:" + strDeliveryFee);
+        //更改起送价格
+        String sendPrice = seller.getSendPrice();
+        String strSendPrice = CountPriceFormater.format(Float.parseFloat(sendPrice));
+        tvSendPrice.setText("起送价格:" + strSendPrice);
     }
 
     private void initViewPager() {
@@ -149,6 +169,85 @@ public class BusinessActivity extends BaseActivity {
             tvSelectNum.setText(totalCount + "");
             tvCountPrice.setText(CountPriceFormater.format(totalPrice));
         }
+
+        //判断购买的商品的总金额是否大于起送金额,大于隐藏起送价,显示去下单UI效果
+        float sendPrice = Float.parseFloat(seller.getSendPrice());
+        if (totalPrice > sendPrice) {
+            //显示去下单按钮,隐藏起送价格
+            tvSubmit.setVisibility(View.VISIBLE);
+            tvSendPrice.setVisibility(View.GONE);
+        } else {
+            tvSubmit.setVisibility(View.GONE);
+            tvSendPrice.setVisibility(View.VISIBLE);
+        }
     }
 
+    @OnClick({R.id.bottom, R.id.tvSubmit})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.bottom:
+                //如果对话框的view是空的,则创建一个view
+                if (shopCartListView == null) {
+                    shopCartListView = onCreateShopCartListView();
+                }
+                if (bottomSheetLayout.isSheetShowing()) {
+                    //如果对话框是显示的点击后就隐藏
+                    bottomSheetLayout.dismissSheet();
+                } else {
+                    //如果对话框是隐藏的点击后就显示
+                    bottomSheetLayout.showWithSheetView(shopCartListView);
+                    //将购物车中的数据进行从新获取,并且告知数据适配器刷新
+                    List<GoodsInfo> shopCartList = businessPresenter.getShopCartList();
+                    shopCartAdapter.setData(shopCartList);
+                }
+                break;
+            case R.id.tvSubmit:
+
+                break;
+        }
+    }
+
+    private View onCreateShopCartListView() {
+        View view = View.inflate(this, R.layout.cart_list, null);
+        RecyclerView rvCart = (RecyclerView) view.findViewById(R.id.rvCart);
+        TextView tvClear = (TextView) view.findViewById(R.id.tvClear);
+        //获取购物车中商品数量的集合
+        List<GoodsInfo> shopCartList = businessPresenter.getShopCartList();
+
+        shopCartAdapter = new ShopCartAdapter(this, shopCartList);
+        rvCart.setAdapter(shopCartAdapter);
+        rvCart.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+        tvClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //弹出对话框,提示用户清空购物车
+                AlertDialog.Builder builder = new AlertDialog.Builder(BusinessActivity.this);
+                builder.setTitle("是否要清空购物车?");
+                builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        dialog.dismiss();
+                        //清空购物车,在businessPresenter类中提供清空购物车方法
+                        businessPresenter.clearShopCart();
+                    }
+                });
+                builder.show();
+            }
+        });
+        return view;
+    }
+
+    public void dismissBottomSheetLayout() {
+        //隐藏弹出购买商品的对话框
+        if (bottomSheetLayout.isSheetShowing()){
+            bottomSheetLayout.dismissSheet();
+        }
+    }
 }
