@@ -2,12 +2,10 @@ package com.lichao.orderfood.presenter;
 
 import android.content.Context;
 import android.util.Log;
-
 import com.lichao.orderfood.presenter.net.bean.GoodsInfo;
 import com.lichao.orderfood.presenter.net.bean.GoodsTypeInfo;
 import com.lichao.orderfood.ui.BusinessActivity;
 import com.lichao.orderfood.ui.fragment.GoodsFragment;
-
 import java.util.ArrayList;
 import java.util.List;
 

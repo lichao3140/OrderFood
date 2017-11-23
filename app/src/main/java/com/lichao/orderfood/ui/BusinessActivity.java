@@ -1,6 +1,7 @@
 package com.lichao.orderfood.ui;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -26,6 +27,7 @@ import com.lichao.orderfood.ui.adapter.ShopCartAdapter;
 import com.lichao.orderfood.ui.fragment.GoodsFragment;
 import com.lichao.orderfood.utils.CountPriceFormater;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -202,7 +204,13 @@ public class BusinessActivity extends BaseActivity {
                 }
                 break;
             case R.id.tvSubmit:
-
+                Intent intent = new Intent(BusinessActivity.this, ConfirmOrderActivity.class);
+                //1.获取购买商品的集合,传递到下一个界面
+                List<GoodsInfo> shopCartList = businessPresenter.getShopCartList();
+                intent.putExtra("shopCartList", (Serializable) shopCartList);
+                //2.运费传递
+                intent.putExtra("deliveryFee",seller.getDeliveryFee());
+                startActivity(intent);
                 break;
         }
     }

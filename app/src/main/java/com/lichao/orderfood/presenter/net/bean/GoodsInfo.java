@@ -1,11 +1,13 @@
 package com.lichao.orderfood.presenter.net.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2017-11-16.
  */
 
-public class GoodsInfo {
-    private int id;
+public class GoodsInfo implements Serializable {
+    private int id;//商品的唯一性id
     private boolean bargainPrice;
     private String form;
     private String icon;
@@ -23,71 +25,54 @@ public class GoodsInfo {
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
-
     public boolean isBargainPrice() {
         return bargainPrice;
     }
-
     public void setBargainPrice(boolean bargainPrice) {
         this.bargainPrice = bargainPrice;
     }
-
     public String getForm() {
         return form;
     }
-
     public void setForm(String form) {
         this.form = form;
     }
-
     public String getIcon() {
         return icon;
     }
-
     public void setIcon(String icon) {
         this.icon = icon;
     }
-
     public int getMonthSaleNum() {
         return monthSaleNum;
     }
-
     public void setMonthSaleNum(int monthSaleNum) {
         this.monthSaleNum = monthSaleNum;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public boolean isNew() {
         return isNew;
     }
-
     public void setNew(boolean aNew) {
         isNew = aNew;
     }
-
     public float getNewPrice() {
         return newPrice;
     }
-
     public void setNewPrice(float newPrice) {
         this.newPrice = newPrice;
     }
-
     public float getOldPrice() {
         return oldPrice;
     }
-
     public void setOldPrice(float oldPrice) {
         this.oldPrice = oldPrice;
     }
