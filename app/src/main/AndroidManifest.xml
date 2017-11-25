@@ -35,6 +35,7 @@
         <activity android:name=".ui.PayOnlineActivity" />
         <activity android:name=".ui.AddressListActivity" />
         <activity android:name=".ui.AddAddressActivity" />
+        <activity android:name=".ui.AddressLocationActivity" />
 
         <!-- 短信验证码 -->
         <activity

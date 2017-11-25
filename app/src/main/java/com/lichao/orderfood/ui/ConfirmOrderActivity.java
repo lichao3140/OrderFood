@@ -1,8 +1,10 @@
 package com.lichao.orderfood.ui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -10,6 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lichao.orderfood.R;
+import com.lichao.orderfood.global.MyApplication;
+import com.lichao.orderfood.model.ReceiptAddressDao;
+import com.lichao.orderfood.model.bean.ReceiptAddressBean;
 import com.lichao.orderfood.presenter.net.bean.GoodsInfo;
 import com.lichao.orderfood.utils.CountPriceFormater;
 
@@ -63,6 +68,9 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     private List<GoodsInfo> shopCartList;
     private String deliveryFee;
+    private String[] addressLabels;
+    private int[] bgLabels;
+    private ReceiptAddressBean receiptAddressBean;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +98,13 @@ public class ConfirmOrderActivity extends BaseActivity {
 
         totalPrice += Float.parseFloat(deliveryFee);
         tvCountPrice.setText("待支付:" + CountPriceFormater.format(totalPrice));
+
+        addressLabels = new String[]{"家", "公司", "学校"};
+        bgLabels = new int[]{
+                Color.parseColor("#fc7251"),//家  橙色
+                Color.parseColor("#468ade"),//公司 蓝色
+                Color.parseColor("#02c14b"),//学校   绿色
+        };
     }
 
     private void initShopCartList() {
@@ -113,7 +128,62 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        ReceiptAddressDao receiptAddressDao = new ReceiptAddressDao(this);
+        //查询数据库对应当前登录用户,已选中的默认地址
+        List<ReceiptAddressBean> receiptAddressBeanList = receiptAddressDao.querySelectAddress(MyApplication.userId);
+        if (receiptAddressBeanList!=null && receiptAddressBeanList.size()>0){
+            receiptAddressBean = receiptAddressBeanList.get(0);
+            showReceiptAddress(receiptAddressBean);
+        }
+        super.onResume();
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 100 && resultCode == 101 && data != null) {
+            ReceiptAddressBean receiptAddressBean = (ReceiptAddressBean) data.getSerializableExtra("receiptAddress");
+            showReceiptAddress(receiptAddressBean);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void showReceiptAddress(ReceiptAddressBean receiptAddressBean) {
+        tvName.setText(receiptAddressBean.getName());
+        tvSex.setText(receiptAddressBean.getSex());
+
+        if (!TextUtils.isEmpty(receiptAddressBean.getPhone())
+                && !TextUtils.isEmpty(receiptAddressBean.getPhoneOther())) {
+            tvPhone.setText(receiptAddressBean.getPhone() + "," + receiptAddressBean.getPhoneOther());
+        }
+        if (!TextUtils.isEmpty(receiptAddressBean.getPhone())
+                && TextUtils.isEmpty(receiptAddressBean.getPhoneOther())) {
+            tvPhone.setText(receiptAddressBean.getPhone());
+        }
+        tvAddress.setText(receiptAddressBean.getReceiptAddress() + receiptAddressBean.getDetailAddress());
+
+        if (!TextUtils.isEmpty(receiptAddressBean.getLabel())) {
+            tvLabel.setVisibility(View.VISIBLE);
+            tvLabel.setText(receiptAddressBean.getLabel());
+            //设置tvLabel背景颜色,根据label中的字符串,获取索引值,根据索引值去指定背景颜色
+            int index = getIndex(receiptAddressBean.getLabel());
+            tvLabel.setBackgroundColor(bgLabels[index]);
+        } else {
+            tvLabel.setVisibility(View.GONE);
+        }
+    }
+
+    private int getIndex(String label) {
+        int index = 0;
+        for (int i = 0; i < addressLabels.length; i++) {
+            if (label.equals(addressLabels[i])){
+                index = i;
+                return index;
+            }
+        }
+        return 0;
+    }
 
     @OnClick({R.id.tvSubmit, R.id.rl_location})
     public void onClick(View view) {
