@@ -53,4 +53,8 @@ dependencies {
     implementation name: 'SMSSDKGUI-2.1.3', ext: 'aar'
     implementation 'com.j256.ormlite:ormlite-android:5.0'
     implementation files('libs/alipaySdk-20170922.jar')
+    implementation files('libs/Amap_2DMap_V2.9.2_20161026.jar')
+    implementation files('libs/AMap_Location_V2.4.1_20160414.jar')
+    implementation files('libs/AMap_Search_V3.6.1_20161122.jar')
+    implementation files('libs/Volley.jar')
 }
